@@ -209,7 +209,7 @@ export default class Profile extends Component {
                               You Add {item.myrefused}
                               <a
                                 style={{ marginLeft: "2px" }}
-                                href={`/downlines/${item.myref}`}
+                                href={`/down/${item.myref}`}
                               >
                                 Check them
                               </a>

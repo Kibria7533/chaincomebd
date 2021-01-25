@@ -132,7 +132,7 @@ router.get("/pro/:username", async (req, res) => {
     res.send(user);
   });
 });
-router.get("/downlines/:myref", userAuth, async (req, res) => {
+router.get("/downlines/:myref", async (req, res) => {
   console.log(req.params.myref);
 
   const user = await User.find({ myparentref: req.params.myref });

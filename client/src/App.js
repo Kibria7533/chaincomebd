@@ -72,7 +72,7 @@ function App() {
         <Route path="/managecontact" exact component={Managecontact} />
         <Route path="/manageservices" exact component={Manageservices} />
         <Route path="/userlogin" exact component={Userlogin} />
-        <Route path="/downlines/:myref" exact component={Downlines} />
+        <Route path="/down/:myref" exact component={Downlines} />
         <Route
           path="/userregistermesege"
           exact

@@ -116,7 +116,7 @@ router.get("/deleteslider/:id", async (req, res) => {
 });
 router.post("/servicessetting", async (req, res) => {
   console.log(req.body);
-  await Setting.findOneAndUpdate({})
+  await Setting.findOne({})
     .then((setting) => {
       if (setting) {
         setting.services.push({
@@ -461,12 +461,14 @@ router.get("/deletefaqs/:id", async (req, res) => {
 
 router.post("/grettingssetting", async (req, res) => {
   console.log(req.body);
-  await Setting.findOneAndUpdate({})
+  await Setting.findOne({})
     .then((setting) => {
       if (setting) {
-        setting.greetingtitle = req.body.greetingtitle;
-        setting.greetingqoute = req.body.greetingqoute;
-        setting.greetingimg = req.body.image;
+        if (req.body.greetingtitle)
+          setting.greetingtitle = req.body.greetingtitle;
+        if (req.body.greetingqoute)
+          setting.greetingqoute = req.body.greetingqoute;
+        if (req.body.image) setting.greetingimg = req.body.image;
         setting
           .save()
           .then((data) => {
@@ -485,11 +487,13 @@ router.post("/grettingssetting", async (req, res) => {
           if (err) {
             console.log(err);
           } else {
-            await Setting.findOneAndUpdate({}).then((setting) => {
+            await Setting.findOne({}).then((setting) => {
               if (setting) {
-                setting.greetingtitle = req.body.greetingtitle;
-                setting.greetingqoute = req.body.greetingqoute;
-                setting.greetingimg = req.body.image;
+                if (req.body.greetingtitle)
+                  setting.greetingtitle = req.body.greetingtitle;
+                if (req.body.greetingqoute)
+                  setting.greetingqoute = req.body.greetingqoute;
+                if (req.body.image) setting.greetingimg = req.body.image;
                 setting
                   .save()
                   .then((data) => {
@@ -533,9 +537,11 @@ router.post("/bussinesssetting", async (req, res) => {
   await Setting.findOneAndUpdate({})
     .then((setting) => {
       if (setting) {
-        setting.bussinesstitle = req.body.bussinesstitle;
-        setting.bussinessqoute = req.body.bussinessqoute;
-        setting.bussinessimg = req.body.image;
+        if (req.body.bussinesstitle)
+          setting.bussinesstitle = req.body.bussinesstitle;
+        if (req.body.bussinessqoute)
+          setting.bussinessqoute = req.body.bussinessqoute;
+        if (req.body.image) setting.bussinessimg = req.body.image;
         setting
           .save()
           .then((data) => {
@@ -556,9 +562,11 @@ router.post("/bussinesssetting", async (req, res) => {
           } else {
             await Setting.findOneAndUpdate({}).then((setting) => {
               if (setting) {
-                setting.bussinesstitle = req.body.bussinesstitle;
-                setting.bussinessqoute = req.body.bussinessqoute;
-                setting.bussinessimg = req.body.image;
+                if (req.body.bussinesstitle)
+                  setting.bussinesstitle = req.body.bussinesstitle;
+                if (req.body.bussinessqoute)
+                  setting.bussinessqoute = req.body.bussinessqoute;
+                if (req.body.image) setting.bussinessimg = req.body.image;
                 setting
                   .save()
                   .then((data) => {
@@ -605,9 +613,9 @@ router.post("/missionsetting", async (req, res) => {
   await Setting.findOneAndUpdate({})
     .then((setting) => {
       if (setting) {
-        setting.missiontitle = req.body.missiontitle;
-        setting.missionqoute = req.body.missionqoute;
-        setting.missionimg = req.body.image;
+        if (req.body.missiontitle) setting.missiontitle = req.body.missiontitle;
+        if (req.body.missionqoute) setting.missionqoute = req.body.missionqoute;
+        if (req.body.image) setting.missionimg = req.body.image;
         setting
           .save()
           .then((data) => {
@@ -628,9 +636,11 @@ router.post("/missionsetting", async (req, res) => {
           } else {
             await Setting.findOneAndUpdate({}).then((setting) => {
               if (setting) {
-                setting.missiontitle = req.body.missiontitle;
-                setting.missionqoute = req.body.missionqoute;
-                setting.missionimg = req.body.image;
+                if (req.body.missiontitle)
+                  setting.missiontitle = req.body.missiontitle;
+                if (req.body.missionqoute)
+                  setting.missionqoute = req.body.missionqoute;
+                if (req.body.image) setting.missionimg = req.body.image;
                 setting
                   .save()
                   .then((data) => {
@@ -674,9 +684,9 @@ router.post("/vissionsetting", async (req, res) => {
   await Setting.findOneAndUpdate({})
     .then((setting) => {
       if (setting) {
-        setting.vissiontitle = req.body.vissiontitle;
-        setting.vissionqoute = req.body.vissionqoute;
-        setting.vissionimg = req.body.image;
+        if (req.body.vissiontitle) setting.vissiontitle = req.body.vissiontitle;
+        if (req.body.vissionqoute) setting.vissionqoute = req.body.vissionqoute;
+        if (req.body.image) setting.vissionimg = req.body.image;
         setting
           .save()
           .then((data) => {
@@ -697,9 +707,11 @@ router.post("/vissionsetting", async (req, res) => {
           } else {
             await Setting.findOneAndUpdate({}).then((setting) => {
               if (setting) {
-                setting.vissiontitle = req.body.vissiontitle;
-                setting.vissionqoute = req.body.vissionqoute;
-                setting.vissionimg = req.body.image;
+                if (req.body.vissiontitle)
+                  setting.vissiontitle = req.body.vissiontitle;
+                if (req.body.vissionqoute)
+                  setting.vissionqoute = req.body.vissionqoute;
+                if (req.body.image) setting.vissionimg = req.body.image;
                 setting
                   .save()
                   .then((data) => {
@@ -913,6 +925,106 @@ router.get("/fetchcommission", async (req, res) => {
     .catch((err) => {
       res.send(err);
     });
+});
+
+router.post("/updateservice", async (req, res) => {
+  console.log(req.body);
+  if (req.body.Image) {
+    await Setting.updateOne(
+      { "services._id": req.body.updatableid },
+      {
+        $set: {
+          "services.$.title": req.body.title,
+          "services.$.img": req.body.Image,
+          "services.$.qoute": req.body.qoute,
+        },
+      }
+    ).then((data) => {
+      res.json({ success: true });
+    });
+  } else {
+    await Setting.updateOne(
+      { "services._id": req.body.updatableid },
+      {
+        $set: {
+          "services.$.title": req.body.title,
+          "services.$.qoute": req.body.qoute,
+        },
+      }
+    ).then((data) => {
+      res.json({ success: true });
+    });
+  }
+});
+
+router.post("/updateteam", async (req, res) => {
+  console.log(req.body);
+  if (req.body.Image) {
+    await Setting.updateOne(
+      { "teams._id": req.body.updatableid },
+      {
+        $set: {
+          "teams.$.img": req.body.Image,
+          "teams.$.name": req.body.name,
+          "teams.$.designation": req.body.designation,
+          "teams.$.fblink": req.body.fblink,
+          "teams.$.twitterlink": req.body.twitterlink,
+          "teams.$.googlelink": req.body.googlelink,
+          "teams.$.linkdin": req.body.linkdin,
+          "teams.$.link": req.body.link,
+        },
+      }
+    ).then((data) => {
+      res.json({ success: true });
+    });
+  } else {
+    await Setting.updateOne(
+      { "teams._id": req.body.updatableid },
+      {
+        $set: {
+          "teams.$.name": req.body.name,
+          "teams.$.designation": req.body.designation,
+          "teams.$.fblink": req.body.fblink,
+          "teams.$.twitterlink": req.body.twitterlink,
+          "teams.$.googlelink": req.body.googlelink,
+          "teams.$.linkdin": req.body.linkdin,
+          "teams.$.link": req.body.link,
+        },
+      }
+    ).then((data) => {
+      res.json({ success: true });
+    });
+  }
+});
+
+router.post("/updateportfolio", async (req, res) => {
+  console.log(req.body);
+  if (req.body.Image) {
+    await Setting.updateOne(
+      { "portfolios._id": req.body.updatableid },
+      {
+        $set: {
+          "portfolios.$.img": req.body.Image,
+          "portfolios.$.title": req.body.title,
+          "portfolios.$.qoute": req.body.qoute,
+        },
+      }
+    ).then((data) => {
+      res.json({ success: true });
+    });
+  } else {
+    await Setting.updateOne(
+      { "teams._id": req.body.updatableid },
+      {
+        $set: {
+          "portfolios.$.title": req.body.title,
+          "portfolios.$.qoute": req.body.qoute,
+        },
+      }
+    ).then((data) => {
+      res.json({ success: true });
+    });
+  }
 });
 
 module.exports = router;

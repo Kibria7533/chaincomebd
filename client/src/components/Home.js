@@ -187,7 +187,7 @@ class Home extends Component {
                     <img
                       className="img-fluid rounded"
                       style={{ width: "100%", height: "420px" }}
-                      src={`${URL}/${item.greetingimg}`}
+                      src={`/images/about-img.jpg`}
                       alt=""
                     />
                   </div>
@@ -209,6 +209,7 @@ class Home extends Component {
                     <div className="card h-100">
                       <div className="card-img">
                         <img
+                          style={{ width: "100%", height: "250px" }}
                           className="img-fluid"
                           src={`${URL}/${item.img}`}
                           alt=""

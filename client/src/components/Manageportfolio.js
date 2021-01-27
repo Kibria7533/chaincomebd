@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import axios from "axios";
 import URL from "./Url";
+import Modal from "react-modal";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactHtmlParser, {
@@ -19,6 +20,8 @@ class Manageportfolio extends Component {
       title: "",
       qoute: "",
       portfolios: [],
+      setIsOpen: false,
+
       loding: false,
     };
   }
@@ -144,12 +147,150 @@ class Manageportfolio extends Component {
       });
   };
 
+  edit = (id) => {
+    this.state.portfolios.map((item, index) => {
+      if (id == item._id) {
+        this.setState({
+          updatableid: id,
+          Image: item.Image,
+          title: item.title,
+          qoute: item.qoute,
+          setIsOpen: true,
+        });
+      }
+    });
+  };
+
+  onUpdate = async (e) => {
+    e.preventDefault();
+    const { updatableid, Image, title, qoute } = this.state;
+
+    await axios
+      .post(
+        `${URL}/updateportfolio`,
+        {
+          updatableid,
+          Image,
+          title,
+          qoute,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((data) => {
+        console.log(data.data);
+
+        this.setState({
+          setIsOpen: false,
+          Image: "",
+          title: "",
+          qoute: "",
+        });
+        this.componentDidMount();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  openModal = () => {
+    this.setState({ setIsOpen: true });
+  };
+
+  closeModal = () => {
+    this.setState({ setIsOpen: false });
+  };
   componentDidMount() {
     this.fetchportfolios();
   }
   render() {
     return (
       <div className="d-flex" id="wrapper">
+        <Modal
+          isOpen={this.state.setIsOpen}
+          onRequestClose={this.closeModal}
+          style={this.customStyles}
+          contentLabel="Example Modal"
+        >
+          {" "}
+          <div className="container-fluid">
+            <div className="container">
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Dropzone
+                  onDrop={this.onDrop}
+                  multiple={false}
+                  maxSize={800000000}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div
+                      style={{
+                        width: "300px",
+                        height: "240px",
+                        border: "1px solid lightgray",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      {...getRootProps()}
+                    >
+                      {/* {console.log("getRootProps", { ...getRootProps() })}
+                  {console.log("getInputProps", { ...getInputProps() })} */}
+                      <input {...getInputProps()} />
+                      <i
+                        className="fa fa-plus"
+                        style={{ fontSize: "3rem" }}
+                      ></i>
+                      {/* <Icon type="plus" style={{ fontSize: '3rem' }} /> */}
+                    </div>
+                  )}
+                </Dropzone>
+
+                <div
+                  style={{
+                    display: "flex",
+                    width: "350px",
+                    height: "240px",
+                    overflowX: "scroll",
+                  }}
+                >
+                  <div>
+                    <img
+                      style={{
+                        minWidth: "300px",
+                        width: "300px",
+                        height: "240px",
+                      }}
+                      src={`${URL}/${this.state.Image}`}
+                      alt={`portfoliosImg`}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <form onSubmit={this.onUpdate}>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  onChange={this.Change}
+                  value={this.state.title}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Title"
+                />
+              </div>
+
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </form>
+          </div>
+        </Modal>
         <div className="bg-light border-right" id="sidebar-wrapper">
           <div className="sidebar-heading">
             {" "}
@@ -409,6 +550,13 @@ class Manageportfolio extends Component {
                           onClick={() => this.remove(portfolios._id)}
                         >
                           Remove
+                        </button>{" "}
+                        /
+                        <button
+                          type="button"
+                          onClick={() => this.edit(portfolios._id)}
+                        >
+                          <i class="fas fa-edit"></i>
                         </button>
                       </td>
                     </tr>

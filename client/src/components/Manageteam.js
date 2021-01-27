@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import axios from "axios";
 import URL from "./Url";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Modal from "react-modal";
+import CKEditor from "react-ckeditor-component";
 import ReactHtmlParser, {
   processNodes,
   convertNodeToElement,
@@ -24,6 +24,7 @@ class Manageteam extends Component {
       linkdin: "",
       link: "",
       teams: [],
+      setIsOpen: false,
       loding: false,
     };
   }
@@ -175,6 +176,87 @@ class Manageteam extends Component {
         // this.setState({ error: err.response.data.messege.msg, loding: false })
       });
   };
+  edit = (id) => {
+    this.state.teams.map((item, index) => {
+      if (id == item._id) {
+        this.setState({
+          updatableid: id,
+          Image: item.Image,
+          name: item.name,
+          fblink: item.fblink,
+          designation: item.designation,
+          googlelink: item.googlelink,
+          twitterlink: item.twitterlink,
+          linkdin: item.linkdin,
+          link: item.link,
+          setIsOpen: true,
+        });
+      }
+    });
+  };
+
+  onUpdate = async (e) => {
+    e.preventDefault();
+    const {
+      updatableid,
+      Image,
+      name,
+      designation,
+      fblink,
+      twitterlink,
+      googlelink,
+      linkdin,
+      link,
+    } = this.state;
+
+    await axios
+      .post(
+        `${URL}/updateteam`,
+        {
+          updatableid,
+          Image,
+          name,
+          designation,
+          fblink,
+          twitterlink,
+          googlelink,
+          linkdin,
+          link,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((data) => {
+        console.log(data.data);
+
+        this.setState({
+          setIsOpen: false,
+          Image: "",
+          name: "",
+          designation: "",
+          fblink: "",
+          twitterlink: "",
+          linkdin: "",
+          googlelink: "",
+          link: "",
+        });
+        this.componentDidMount();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  openModal = () => {
+    this.setState({ setIsOpen: true });
+  };
+
+  closeModal = () => {
+    this.setState({ setIsOpen: false });
+  };
 
   componentDidMount() {
     this.fetchteams();
@@ -182,6 +264,173 @@ class Manageteam extends Component {
   render() {
     return (
       <div className="d-flex" id="wrapper">
+        <Modal
+          isOpen={this.state.setIsOpen}
+          onRequestClose={this.closeModal}
+          style={this.customStyles}
+          contentLabel="Example Modal"
+        >
+          <div className="container-fluid">
+            <div className="container">
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Dropzone
+                  onDrop={this.onDrop}
+                  multiple={false}
+                  maxSize={800000000}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div
+                      style={{
+                        width: "300px",
+                        height: "240px",
+                        border: "1px solid lightgray",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      {...getRootProps()}
+                    >
+                      {/* {console.log("getRootProps", { ...getRootProps() })}
+                      {console.log("getInputProps", { ...getInputProps() })} */}
+                      <input {...getInputProps()} />
+                      <i
+                        className="fa fa-plus"
+                        style={{ fontSize: "3rem" }}
+                      ></i>
+                      {/* <Icon type="plus" style={{ fontSize: '3rem' }} /> */}
+                    </div>
+                  )}
+                </Dropzone>
+
+                <div
+                  style={{
+                    display: "flex",
+                    width: "350px",
+                    height: "240px",
+                    overflowX: "scroll",
+                  }}
+                >
+                  <div>
+                    <img
+                      style={{
+                        minWidth: "300px",
+                        width: "300px",
+                        height: "240px",
+                      }}
+                      src={`${URL}/${this.state.Image}`}
+                      alt={`teamsImg`}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <form onSubmit={this.onUpdate}>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">name</label>
+                <input
+                  type="text"
+                  name="name"
+                  onChange={this.Change}
+                  value={this.state.name}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter name"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Designation</label>
+                <input
+                  type="text"
+                  name="designation"
+                  onChange={this.Change}
+                  value={this.state.designation}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter designation"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Facebook Link</label>
+                <input
+                  type="text"
+                  name="fblink"
+                  onChange={this.Change}
+                  value={this.state.fblink}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter name"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Google Link</label>
+                <input
+                  type="text"
+                  name="googlelink"
+                  onChange={this.Change}
+                  value={this.state.googlelink}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter name"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Twitter Link</label>
+                <input
+                  type="text"
+                  name="twitterlink"
+                  onChange={this.Change}
+                  value={this.state.twitterlink}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter name"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Linkdin</label>
+                <input
+                  type="text"
+                  name="linkdin"
+                  onChange={this.Change}
+                  value={this.state.linkdin}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter name"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Personal Website</label>
+                <input
+                  type="text"
+                  name="link"
+                  onChange={this.Change}
+                  value={this.state.link}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter name"
+                />
+              </div>
+              {/* <div className="form-group">
+                <label htmlFor="exampleInputEmail1">teams designation</label>
+
+                <CKEditor
+                  editor={ClassicEditor}
+                  value={this.state.designation}
+                  onChange={this.Changesdesignation}
+                />
+              </div> */}
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </form>
+          </div>
+        </Modal>
         <div className="bg-light border-right" id="sidebar-wrapper">
           <div className="sidebar-heading">
             {" "}
@@ -537,6 +786,13 @@ class Manageteam extends Component {
                           onClick={() => this.remove(teams._id)}
                         >
                           Remove
+                        </button>{" "}
+                        /
+                        <button
+                          type="button"
+                          onClick={() => this.edit(teams._id)}
+                        >
+                          <i class="fas fa-edit"></i>
                         </button>
                       </td>
                     </tr>

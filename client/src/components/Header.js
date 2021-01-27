@@ -84,7 +84,7 @@ class Header extends Component {
         <Navbar bg="light" expand="lg">
           <Navbar.Brand href="/">
             {" "}
-            <img src="images/chainlogo.png" alt="logo" />
+            <img src="images/logoc.jpg" alt="logo" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse

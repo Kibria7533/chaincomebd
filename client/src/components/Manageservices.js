@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import axios from "axios";
 import URL from "./Url";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+import CKEditor from "react-ckeditor-component";
+import Modal from "react-modal";
 import ReactHtmlParser, {
   processNodes,
   convertNodeToElement,
@@ -20,6 +21,7 @@ class Manageservices extends Component {
       qoute: "",
       services: [],
       loding: false,
+      setIsOpen: false,
     };
   }
 
@@ -50,6 +52,20 @@ class Manageservices extends Component {
         console.log("hi");
         console.log(err);
       });
+  };
+  onBlur(evt) {
+    console.log("onBlur event called with event info: ", evt);
+  }
+
+  afterPaste(evt) {
+    console.log("afterPaste event called with event info: ", evt);
+  }
+  onChangeqoute = (evt) => {
+    console.log("onChange fired with event info: ", evt);
+    var newContent = evt.editor.getData();
+    this.setState({
+      qoute: newContent,
+    });
   };
   // onDelete = (image) => {
   //   const currentIndex = this.state.Images.indexOf(image);
@@ -148,12 +164,161 @@ class Manageservices extends Component {
       });
   };
 
+  edit = (id) => {
+    this.state.services.map((item, index) => {
+      if (id == item._id) {
+        this.setState({
+          updatableid: id,
+          Image: item.Image,
+          title: item.title,
+          qoute: item.qoute,
+          setIsOpen: true,
+        });
+      }
+    });
+  };
+
+  onUpdate = async (e) => {
+    e.preventDefault();
+    const { updatableid, Image, title, qoute } = this.state;
+
+    await axios
+      .post(
+        `${URL}/updateservice`,
+        {
+          updatableid,
+          Image,
+          title,
+          qoute,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((data) => {
+        console.log(data.data);
+
+        this.setState({
+          setIsOpen: false,
+          Image: "",
+          title: "",
+          qoute: "",
+        });
+        this.componentDidMount();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  openModal = () => {
+    this.setState({ setIsOpen: true });
+  };
+
+  closeModal = () => {
+    this.setState({ setIsOpen: false });
+  };
   componentDidMount() {
     this.fetchservices();
   }
   render() {
     return (
       <div className="d-flex" id="wrapper">
+        <Modal
+          isOpen={this.state.setIsOpen}
+          onRequestClose={this.closeModal}
+          style={this.customStyles}
+          contentLabel="Example Modal"
+        >
+          <div className="container-fluid">
+            <div className="container">
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Dropzone
+                  onDrop={this.onDrop}
+                  multiple={false}
+                  maxSize={800000000}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div
+                      style={{
+                        width: "300px",
+                        height: "240px",
+                        border: "1px solid lightgray",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      {...getRootProps()}
+                    >
+                      {/* {console.log("getRootProps", { ...getRootProps() })}
+                      {console.log("getInputProps", { ...getInputProps() })} */}
+                      <input {...getInputProps()} />
+                      <i
+                        className="fa fa-plus"
+                        style={{ fontSize: "3rem" }}
+                      ></i>
+                      {/* <Icon type="plus" style={{ fontSize: '3rem' }} /> */}
+                    </div>
+                  )}
+                </Dropzone>
+
+                <div
+                  style={{
+                    display: "flex",
+                    width: "350px",
+                    height: "240px",
+                    overflowX: "scroll",
+                  }}
+                >
+                  <div>
+                    <img
+                      style={{
+                        minWidth: "300px",
+                        width: "300px",
+                        height: "240px",
+                      }}
+                      src={`${URL}/${this.state.Image}`}
+                      alt={`servicesImg`}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <form onSubmit={this.onUpdate}>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  onChange={this.Change}
+                  value={this.state.title}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Title"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">services Qoute</label>
+
+                <CKEditor
+                  activeClass="p10"
+                  content={this.state.qoute}
+                  events={{
+                    blur: this.onBlur,
+                    afterPaste: this.afterPaste,
+                    change: this.onChangeqoute,
+                  }}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </form>
+          </div>
+        </Modal>
         <div className="bg-light border-right" id="sidebar-wrapper">
           <div className="sidebar-heading">
             {" "}
@@ -379,9 +544,13 @@ class Manageservices extends Component {
                 <label htmlFor="exampleInputEmail1">services Qoute</label>
 
                 <CKEditor
-                  editor={ClassicEditor}
-                  value={this.state.qoute}
-                  onChange={this.Changesqoute}
+                  activeClass="p10"
+                  content={this.state.qoute}
+                  events={{
+                    blur: this.onBlur,
+                    afterPaste: this.afterPaste,
+                    change: this.onChangeqoute,
+                  }}
                 />
               </div>
               <button type="submit" className="btn btn-primary">
@@ -423,6 +592,13 @@ class Manageservices extends Component {
                           onClick={() => this.remove(services._id)}
                         >
                           Remove
+                        </button>
+                        /
+                        <button
+                          type="button"
+                          onClick={() => this.edit(services._id)}
+                        >
+                          <i class="fas fa-edit"></i>
                         </button>
                       </td>
                     </tr>

@@ -161,6 +161,7 @@ class Faq extends Component {
                           data-fancybox="images"
                         >
                           <img
+                            style={{ width: "100%", height: "200px" }}
                             className="card-img-top"
                             src={`${URL}/${item.img}`}
                             alt=""

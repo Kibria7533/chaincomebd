@@ -222,6 +222,7 @@ class Aboutus extends Component {
                     <div className="card h-100 text-center">
                       <div className="our-team">
                         <img
+                          style={{ width: "100%", height: "400px" }}
                           className="img-fluid"
                           src={`${URL}/${item.img}`}
                           alt=""

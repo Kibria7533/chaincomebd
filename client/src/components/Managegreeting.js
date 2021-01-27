@@ -70,15 +70,15 @@ class Managegretting extends Component {
     //   return alert("Give a grettingtitle of the product!");
     // }
 
-    if (!image) {
-      return alert("Give a grettings image!");
-    }
-    if (!greetingtitle) {
-      return alert("Give a grettings title!");
-    }
-    if (!greetingqoute) {
-      return alert("Give greeting qoute!");
-    }
+    // if (image) {
+    //   return alert("Give a grettings image!");
+    // }
+    // if (!greetingtitle) {
+    //   return alert("Give a grettings title!");
+    // }
+    // if (!greetingqoute) {
+    //   return alert("Give greeting qoute!");
+    // }
 
     const variables = {
       greetingtitle,
